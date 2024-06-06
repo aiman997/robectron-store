@@ -10,6 +10,12 @@ COPY package*.json ./
 # Install dependencies
 RUN npm install
 
+# Ensure permissions are set correctly
+RUN chown -R node:node /app
+
+# Switch to a non-root user
+USER node
+
 # Copy the rest of the application
 COPY . .
 
