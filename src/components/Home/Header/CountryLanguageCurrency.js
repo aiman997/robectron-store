@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { ReactComponent as ArrowIcon } from '../../../assets/icons/arrow-down.svg';
 import countryCurrencyMapping from '../../../data/countryCurrencyMapping.json';
@@ -89,10 +89,19 @@ const importAll = (r) => {
 const flags = importAll(require.context('../../../assets/flags', false, /\.(png|jpe?g|svg)$/));
 
 const CountryLanguageCurrency = () => {
+  const defaultCountry = countryCurrencyMapping[0].country;
+  const defaultCurrency = countryCurrencyMapping[0].currency;
+  const defaultLanguage = languages[0].language;
+
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedCountry, setSelectedCountry] = useState('United States');
-  const [language, setLanguage] = useState('English');
-  const [currency, setCurrency] = useState('USD');
+  const [selectedCountry, setSelectedCountry] = useState(defaultCountry);
+  const [language, setLanguage] = useState(defaultLanguage);
+  const [currency, setCurrency] = useState(defaultCurrency);
+
+  useEffect(() => {
+    setSelectedCountry(defaultCountry);
+    setCurrency(defaultCurrency);
+  }, [defaultCountry, defaultCurrency]);
 
   const handleToggle = () => setIsOpen(!isOpen);
   const handleSave = () => setIsOpen(false);
