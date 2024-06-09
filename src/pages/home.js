@@ -1,41 +1,35 @@
-// import React from 'react';
-// import Header from '../components/Header';
-// import ImageSlider from '../components/ImageSlider';
-
-// const Home = () => (
-//   <div>
-//     <Header />
-//     <ImageSlider />
-//   </div>
-// );
-
-// export default Home;
-
-
 import React from 'react';
-import Header from '../components/Header';
-import ImageSlider from '../components/ImageSlider';
 import styled from 'styled-components';
+import Header from '../components/Home/Header/Header';
+import ImageSlider from '../components/Home/Body/ImageSlider';
+import ImageCarousel from '../components/Home/Body/ImageCarousel';
 
 const HomeContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 20px; /* Adjust padding around the whole content */
+  justify-content: flex-start;
+  padding: 0 20px;
+  background: ${props => props.theme.backgroundGradient};
+  min-height: 150vh;
+  padding-top: 80px;
+`;
+
+const ContentContainer = styled.div`
+  width: 100%;
+  max-width: 1000px; /* Matches the max-width of ImageSlider */
 `;
 
 const Home = () => (
   <div>
-      <Header/>
-      <HomeContainer>
+    <Header />
+    <HomeContainer>
+      <ContentContainer>
         <ImageSlider />
-      </HomeContainer>
-    </div>
+        <ImageCarousel />
+      </ContentContainer>
+    </HomeContainer>
+  </div>
 );
-
-
-
-
 
 export default Home;

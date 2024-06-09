@@ -1,0 +1,17 @@
+[
+  {
+    "country": "Ireland",
+    "currency": "EUR",
+    "flag": "ireland.svg"
+  },
+  {
+    "country": "Libya",
+    "currency": "LYD",
+    "flag": "libya.svg"
+  },
+  {
+    "country": "Malaysia",
+    "currency": "MYR",
+    "flag": "malaysia.svg"
+  }
+]
