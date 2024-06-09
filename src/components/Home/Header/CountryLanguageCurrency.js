@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { ReactComponent as ArrowIcon } from '../../../assets/icons/arrow-down.svg';
-import countryCurrencyMapping from '../../../data/countryCurrencyMapping.json';
+import countries from '../../../data/countries.json';
 import languages from '../../../data/languages.json';
+import currencies from '../../../data/currencies.json';
 
 const Wrapper = styled.div`
   position: relative;
@@ -89,8 +90,8 @@ const importAll = (r) => {
 const flags = importAll(require.context('../../../assets/flags', false, /\.(png|jpe?g|svg)$/));
 
 const CountryLanguageCurrency = () => {
-  const defaultCountry = countryCurrencyMapping[0].country;
-  const defaultCurrency = countryCurrencyMapping[0].currency;
+  const defaultCountry = countries[0].country;
+  const defaultCurrency = currencies[0].currency;
   const defaultLanguage = languages[0].language;
 
   const [isOpen, setIsOpen] = useState(false);
@@ -107,14 +108,18 @@ const CountryLanguageCurrency = () => {
   const handleSave = () => setIsOpen(false);
 
   const handleCountryChange = (e) => {
-    const country = countryCurrencyMapping.find(c => c.country === e.target.value);
+    const country = countries.find(c => c.country === e.target.value);
     setSelectedCountry(country.country);
-    setCurrency(country.currency);
   };
 
   const handleLanguageChange = (e) => {
     const selectedLanguage = languages.find(lang => lang.language === e.target.value);
     setLanguage(selectedLanguage.language);
+  };
+
+  const handleCurrencyChange = (e) => {
+    const selectedCurrency = currencies.find(cur => cur.currency === e.target.value);
+    setCurrency(selectedCurrency.currency);
   };
 
   const handleDropdownClick = (e) => {
@@ -135,7 +140,7 @@ const CountryLanguageCurrency = () => {
         <DropdownItem>
           <label>Ship to</label>
           <select value={selectedCountry} onChange={handleCountryChange}>
-            {countryCurrencyMapping.map(country => (
+            {countries.map(country => (
               <option key={country.country} value={country.country}>
                 {country.country}
               </option>
@@ -154,10 +159,10 @@ const CountryLanguageCurrency = () => {
         </DropdownItem>
         <DropdownItem>
           <label>Currency</label>
-          <select value={currency} onChange={(e) => setCurrency(e.target.value)}>
-            {countryCurrencyMapping.map(country => (
-              <option key={country.currency} value={country.currency}>
-                {country.currency} ({country.country})
+          <select value={currency} onChange={handleCurrencyChange}>
+            {currencies.map(cur => (
+              <option key={cur.currency} value={cur.currency}>
+                {cur.currency} ({cur.name})
               </option>
             ))}
           </select>

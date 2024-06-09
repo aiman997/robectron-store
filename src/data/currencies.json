@@ -1,0 +1,19 @@
+[
+    {
+      "currency": "USD",
+      "name": "US Dollar"
+    },
+    {
+      "currency": "EUR",
+      "name": "Euro"
+    },
+    {
+      "currency": "LYD",
+      "name": "Libyan Dinar"
+    },
+    {
+      "currency": "MYR",
+      "name": "Malaysian Ringgit"
+    }
+  ]
+  
