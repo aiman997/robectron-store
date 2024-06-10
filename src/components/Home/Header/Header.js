@@ -14,6 +14,7 @@ const HeaderWrapper = styled.div`
   z-index: 1000;
   background-color: ${props => props.theme.headerBg};
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  
 `;
 
 const HeaderContainer = styled.header`
@@ -22,7 +23,9 @@ const HeaderContainer = styled.header`
   align-items: center;
   padding: 0px 0px 0px 0px;
   margin: 0 auto;
-  max-width: 1300px; 
+  /* max-width: 1300px;  */
+  max-width: 90%;
+  width: 100%;
   color: ${props => props.theme.headerText};
   height: auto;
 
@@ -30,6 +33,7 @@ const HeaderContainer = styled.header`
     flex-direction: column;
     align-items: flex-start;
     padding: 10px;
+    max-width: 100%;
   }
 `;
 
@@ -38,7 +42,7 @@ const Header = () => {
   const headerRef = useRef(null);
 
   useEffect(() => {
-    // No need for dropdown management here, keeping the effect for potential future needs
+    // keeping the effect for potential future needs
   }, []);
 
   return (

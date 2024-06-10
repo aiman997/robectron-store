@@ -31,8 +31,9 @@ const Card = styled(Link)`
   }
 
   img {
-    width: 150px;
-    height: 150px;
+    width: 220%;
+    height: 220%;
+    object-fit: cover;
   }
 `;
 
@@ -42,6 +43,7 @@ const Title = styled.h3`
   text-overflow: ellipsis;
   font-size: 12px;
   text-align: center;
+  /* margin-top: 10px; */
 `;
 
 const Mycard = ({ category }) => {

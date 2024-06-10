@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { ReactComponent as ArrowIcon } from '../../../assets/icons/arrow-down.svg';
 import countries from '../../../data/countries.json';
 import languages from '../../../data/languages.json';
 import currencies from '../../../data/currencies.json';
+import i18n from '../../../i18n';
+// import { useTheme } from '../../../context/ThemeContext';
 
 const Wrapper = styled.div`
   position: relative;
@@ -39,17 +41,32 @@ const CurrencyText = styled.span`
   color: ${props => props.theme.headerText};
 `;
 
+const Label = styled.label`
+  color: ${props => props.theme.labelText};
+`;
+
 const Dropdown = styled.div`
   display: ${props => (props.isOpen ? 'block' : 'none')};
   position: absolute;
   top: 40px;
-  right: 0;
+  left: ${props => props.left}px;
   width: 200px;
-  background-color: #fff;
+  background-color: ${props => props.theme.clc_background};
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
   z-index: 1000;
   padding: 10px;
   border-radius: 8px;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -10px; // Adjust this value based on the size of the triangle
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 0 10px 10px 10px; // Adjust the size of the triangle
+    border-style: solid;
+    border-color: transparent transparent ${props => props.theme.clc_background} transparent;
+  }
 `;
 
 const DropdownItem = styled.div`
@@ -64,20 +81,27 @@ const DropdownItem = styled.div`
     padding: 8px;
     border-radius: 5px;
     border: 1px solid #ccc;
+    color: ${props => props.theme.selectText};
+    background-color: ${props => props.theme.selectBackground};
+
+    option {
+      color: ${props => props.theme.optionText};
+      background-color: ${props => props.theme.optionBackground};
+    }
   }
 `;
 
 const SaveButton = styled.button`
   width: 100%;
   padding: 10px;
-  background-color: #000;
-  color: #fff;
+  background-color: ${props => props.theme.save_btn_color};
+  color: ${props => props.theme.save_btn_text};
   border: none;
   border-radius: 5px;
   cursor: pointer;
 
   &:hover {
-    background-color: #333;
+    background-color: ${props => props.theme.save_btn_hover_color};
   }
 `;
 
@@ -98,11 +122,25 @@ const CountryLanguageCurrency = () => {
   const [selectedCountry, setSelectedCountry] = useState(defaultCountry);
   const [language, setLanguage] = useState(defaultLanguage);
   const [currency, setCurrency] = useState(defaultCurrency);
+  const [dropdownLeft, setDropdownLeft] = useState(0);
+
+  const wrapperRef = useRef(null);
 
   useEffect(() => {
     setSelectedCountry(defaultCountry);
     setCurrency(defaultCurrency);
   }, [defaultCountry, defaultCurrency]);
+
+  useEffect(() => {
+    i18n.changeLanguage(language === 'English' ? 'en' : 'ar');
+  }, [language]);
+
+  useEffect(() => {
+    if (wrapperRef.current) {
+      const wrapperWidth = wrapperRef.current.offsetWidth;
+      setDropdownLeft(wrapperWidth / 2 - 100); // 100 is half the width of the dropdown (200px)
+    }
+  }, [isOpen]);
 
   const handleToggle = () => setIsOpen(!isOpen);
   const handleSave = () => setIsOpen(false);
@@ -127,7 +165,7 @@ const CountryLanguageCurrency = () => {
   };
 
   return (
-    <Wrapper onClick={handleToggle}>
+    <Wrapper ref={wrapperRef} onClick={handleToggle}>
       <Display>
         <Flag src={flags[`${selectedCountry.replace(/ /g, '-').toLowerCase()}.svg`]} alt="Flag" />
         <TextContainer>
@@ -136,9 +174,9 @@ const CountryLanguageCurrency = () => {
         </TextContainer>
         <ArrowIcon style={{ width: '12px', height: '12px' }} /> 
       </Display>
-      <Dropdown isOpen={isOpen} onClick={handleDropdownClick}>
+      <Dropdown isOpen={isOpen} left={dropdownLeft} onClick={handleDropdownClick}>
         <DropdownItem>
-          <label>Ship to</label>
+          <Label>Ship to</Label>
           <select value={selectedCountry} onChange={handleCountryChange}>
             {countries.map(country => (
               <option key={country.country} value={country.country}>
@@ -148,7 +186,7 @@ const CountryLanguageCurrency = () => {
           </select>
         </DropdownItem>
         <DropdownItem>
-          <label>Language</label>
+          <Label>Language</Label>
           <select value={language} onChange={handleLanguageChange}>
             {languages.map(lang => (
               <option key={lang.code} value={lang.language}>
@@ -158,7 +196,7 @@ const CountryLanguageCurrency = () => {
           </select>
         </DropdownItem>
         <DropdownItem>
-          <label>Currency</label>
+          <Label>Currency</Label>
           <select value={currency} onChange={handleCurrencyChange}>
             {currencies.map(cur => (
               <option key={cur.currency} value={cur.currency}>

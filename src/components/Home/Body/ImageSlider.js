@@ -3,7 +3,8 @@ import styled from 'styled-components';
 
 const SliderContainer = styled.div`
   width: 100%;
-  max-width: 1000px;
+  /* max-width: 1000px; */
+  max-width: 70%;
   margin: 0 auto;
   padding-top: 100px;
   overflow: hidden;

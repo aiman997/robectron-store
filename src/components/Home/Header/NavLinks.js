@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Link, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const NavContainer = styled.nav`
   display: flex;
@@ -46,12 +47,13 @@ const StyledLink = styled(Link)`
 
 const NavLinks = () => {
   const location = useLocation();
+  const { t } = useTranslation();
 
   return (
     <NavContainer>
-      <StyledLink to="/" active={location.pathname === '/'}>Home</StyledLink>
-      <StyledLink to="/iot-system" active={location.pathname === '/iot-system'}>IoT System</StyledLink>
-      <StyledLink to="/product" active={location.pathname === '/product'}>Products</StyledLink>
+      <StyledLink to="/" active={location.pathname === '/'}>{t('Home')}</StyledLink>
+      <StyledLink to="/iot-system" active={location.pathname === '/iot-system'}>{t('IoT System')}</StyledLink>
+      <StyledLink to="/product" active={location.pathname === '/product'}>{t('Products')}</StyledLink>
     </NavContainer>
   );
 };

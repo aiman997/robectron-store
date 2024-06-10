@@ -13,11 +13,14 @@ const HomeContainer = styled.div`
   background: ${props => props.theme.backgroundGradient};
   min-height: 150vh;
   padding-top: 80px;
+  width: 100%;
 `;
 
 const ContentContainer = styled.div`
   width: 100%;
-  max-width: 1000px; /* Matches the max-width of ImageSlider */
+  /* max-width: 1000px;  */
+  max-width: 100%;
+  margin: 0 auto;
 `;
 
 const Home = () => (

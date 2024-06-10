@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useRef } from 'react';
 import styled from 'styled-components';
 import Mycard from './MyCard';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -9,17 +9,17 @@ import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons
 const CarouselWrapper = styled.div`
   position: relative;
   margin-top: 10%;
-  padding: 0px;
+  max-width: 70%;
+  margin: 0 auto;
 `;
 
 const Title = styled.h2`
   position: absolute;
-  top: 0;
-  left: 0;
   margin: 0;
   padding: 10px;
   font-size: 24px;
   color: #000;
+  text-align: center;
 `;
 
 const ProductCarousel = styled.div`
@@ -30,8 +30,8 @@ const ProductCarousel = styled.div`
 `;
 
 const ProductContainer = styled.div`
-  padding: 0 0px;
   display: flex;
+  /* justify-content: center; */
   overflow-x: hidden;
   scroll-behavior: smooth;
 `;
@@ -41,25 +41,28 @@ const Button = styled.button`
   width: 30px;
   height: 100%;
   position: absolute;
-  top: 0px;
+  top: 50%;
+  transform: translateY(-50%);
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: rgba(0, 0, 0, 0);
   cursor: pointer;
 
-  /* &:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-  } */
 
   svg {
-    color: orange; /* Set the arrow color to orange */
-    font-size: 15px; /* Adjust the size of the arrow if needed */
+    color: orange;
+    font-size: 20px; 
   }
 `;
 
+
+const PrevButton = styled(Button)`
+  left: 0;
+`;
+
 const NextButton = styled(Button)`
-  right: 0px;
+  right: 0;
 `;
 
 
@@ -89,44 +92,41 @@ const categories = [
   { name: 'Desktop PCs', image: 'Desktop_PC.png', link: '/category/desktop-pcs' },
 ];
 
-const ImageCarousel = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const containerRef = useRef(null);
-
-  const handlePrevClick = () => {
-    setCurrentIndex((prevIndex) => (prevIndex === 0 ? categories.length - 1 : prevIndex - 1));
-  };
-
-  const handleNextClick = () => {
-    setCurrentIndex((prevIndex) => (prevIndex === categories.length - 1 ? 0 : prevIndex + 1));
-  };
-
-  useEffect(() => {
-    if (containerRef.current) {
-      containerRef.current.scrollLeft = currentIndex * containerRef.current.clientWidth;
-    }
-  }, [currentIndex]);
+  const ImageCarousel = () => {
+    const containerRef = useRef(null);
+  
+    const handlePrevClick = () => {
+      if (containerRef.current) {
+        containerRef.current.scrollLeft -= containerRef.current.clientWidth;
+      }
+    };
+  
+    const handleNextClick = () => {
+      if (containerRef.current) {
+        containerRef.current.scrollLeft += containerRef.current.clientWidth;
+      }
+    };
 
   return (
     <CarouselWrapper>
-        <Title>Shop By Category</Title>
-        <ProductCarousel>
-            <Button className="pre-btn" onClick={handlePrevClick}>
-                <FontAwesomeIcon icon={faChevronLeft} />
-            </Button>
-            <NextButton className="next-btn" onClick={handleNextClick}>
-                <FontAwesomeIcon icon={faChevronRight} />
-            </NextButton>
+      <Title>Shop By Category</Title>
+      <ProductCarousel>
+        <PrevButton className="pre-btn" onClick={handlePrevClick}>
+          <FontAwesomeIcon icon={faChevronLeft} />
+        </PrevButton>
         <ProductContainer className="product-container" ref={containerRef}>
-        {categories.map((category, index) => {
-        const imagePath = images[category.image];
-        console.log(`Category: ${category.name}, Image Path: ${imagePath}`);
-          return (
-            <Mycard key={index} cardno={index + 1} category={{ ...category, image: imagePath }} />
-          );
-        })}
-      </ProductContainer>
-    </ProductCarousel>
+          {categories.map((category, index) => {
+            const imagePath = images[category.image];
+            console.log(`Category: ${category.name}, Image Path: ${imagePath}`);
+            return (
+              <Mycard key={index} cardno={index + 1} category={{ ...category, image: imagePath }} />
+            );
+          })}
+        </ProductContainer>
+        <NextButton className="next-btn" onClick={handleNextClick}>
+          <FontAwesomeIcon icon={faChevronRight} />
+        </NextButton>
+      </ProductCarousel>
     </CarouselWrapper>
   );
 };
