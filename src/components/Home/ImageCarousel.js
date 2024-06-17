@@ -76,7 +76,7 @@ const importAll = (r) => {
 };
 
 
-const images = importAll(require.context('../../../assets/products', false, /\.(png|jpe?g|svg)$/));
+const images = importAll(require.context('../../assets/products', false, /\.(png|jpe?g|svg)$/));
 console.log('Imported Images:', images);
 
 const categories = [

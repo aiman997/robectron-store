@@ -1,8 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
-import Header from '../components/Home/Header/Header';
-import ImageSlider from '../components/Home/Body/ImageSlider';
-import ImageCarousel from '../components/Home/Body/ImageCarousel';
+import Header from '../components/Header/Header';
+import ImageSlider from '../components/Home/ImageSlider';
+import ImageCarousel from '../components/Home/ImageCarousel';
+import TopSelling from '../components/Home/TopSelling';
+import dummyProducts from '../data/dummyData';
+import Footer from '../components/Footer/Footer';
+
 
 const HomeContainer = styled.div`
   display: flex;
@@ -30,6 +34,8 @@ const Home = () => (
       <ContentContainer>
         <ImageSlider />
         <ImageCarousel />
+        <TopSelling products={dummyProducts}/>
+        <Footer />
       </ContentContainer>
     </HomeContainer>
   </div>

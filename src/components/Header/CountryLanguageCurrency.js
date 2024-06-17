@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import { ReactComponent as ArrowIcon } from '../../../assets/icons/arrow-down.svg';
-import countries from '../../../data/countries.json';
-import languages from '../../../data/languages.json';
-import currencies from '../../../data/currencies.json';
-import i18n from '../../../i18n';
-// import { useTheme } from '../../../context/ThemeContext';
+import { ReactComponent as ArrowIcon } from '../../assets/icons/arrow-down.svg';
+import countries from '../../data/countries.json';
+import languages from '../../data/languages.json';
+import currencies from '../../data/currencies.json';
+import i18n from '../../i18n';
 
 const Wrapper = styled.div`
   position: relative;
@@ -111,7 +110,7 @@ const importAll = (r) => {
   return images;
 };
 
-const flags = importAll(require.context('../../../assets/flags', false, /\.(png|jpe?g|svg)$/));
+const flags = importAll(require.context('../../assets/flags', false, /\.(png|jpe?g|svg)$/));
 
 const CountryLanguageCurrency = () => {
   const defaultCountry = countries[0].country;

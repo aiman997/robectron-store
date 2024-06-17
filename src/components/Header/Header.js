@@ -1,10 +1,10 @@
 import React, { useRef, useEffect } from 'react';
 import styled from 'styled-components';
-import { useTheme } from '../../../context/ThemeContext';
+import { useTheme } from '../../context/ThemeContext';
 import Logo from './Logo';
 import NavLinks from './NavLinks';
 import SearchBar from './SearchBar';
-import UserActions from './UserActions';
+import UserActions from './UserActions/UserActions';
 
 
 const HeaderWrapper = styled.div`

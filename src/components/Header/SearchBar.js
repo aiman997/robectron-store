@@ -59,7 +59,7 @@ const SearchBar = () => {
         />
         <SearchIcon
           icon={faSearch}
-          dir={currentLang === 'ar' ? 'rtl' : 'ltr'} // Set direction based on language
+          dir={currentLang === 'ar' ? 'rtl' : 'ltr'}
         />
         {/* <SearchIcon icon={faSearch} /> */}
       </SearchInputContainer>

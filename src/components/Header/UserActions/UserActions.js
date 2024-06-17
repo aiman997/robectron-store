@@ -3,17 +3,20 @@ import styled from 'styled-components';
 import { Link, useLocation } from 'react-router-dom';
 import { ReactComponent as UserIcon } from '../../../assets/icons/user.svg';
 import { ReactComponent as CartIcon } from '../../../assets/icons/cart.svg';
+import { useAuth } from '../../../context/AuthContext';
+import { ReactComponent as ProfileIcon } from '../../../assets/icons/user-profile-3.svg'; 
 import { useTheme } from '../../../context/ThemeContext';
 import ThemeToggle from '../../ThemeToggle';
-import CountryLanguageCurrency from './CountryLanguageCurrency';
+import CountryLanguageCurrency from '../CountryLanguageCurrency';
+import ProfileDropdown from './ProfileDropdown';
 import { useTranslation } from 'react-i18next';
 
 const NavContainer = styled.nav`
   display: flex;
   align-items: center;
-  gap: 25px;
+  gap: 35px;
   margin-left: 0%;
-  margin-right: 0px;
+  margin-right: 15px;
   position: relative;
   @media (max-width: 768px) {
     width: 100%;
@@ -29,6 +32,7 @@ const StyledLink = styled(Link)`
   font-weight: ${props => (props.active ? 'bold' : 'normal')};
   display: flex;
   align-items: center;
+  flex-direction: column;
 
   &:hover {
     text-decoration: underline;
@@ -37,19 +41,23 @@ const StyledLink = styled(Link)`
   .link-text {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
+    margin-top: 5px;
   }
 
   .main-text {
     position: relative;
     top: -4px;
-    ${props => (props.dir === 'rtl' ? 'right: 0px;' : 'right: -10px;')}
+  }
+  .usericon-main-text{
+    position: relative;
+    top: 6px;
+    margin-bottom: 9px;
   }
 
   .cart-main-text {
     position: relative;
     top: -4px;
-    ${props => (props.dir === 'rtl' ? 'right: 1px;' : 'right: -10px;')}
   }
 
   .sub-text {
@@ -57,9 +65,15 @@ const StyledLink = styled(Link)`
     color: ${props => (props.active ? '#FF6C00' : props.theme.subTextColor)};
   }
 
+  .usericon-sub-text{
+    font-size: 0.8em;
+    color: ${props => (props.active ? '#FF6C00' : props.theme.subTextColor)};
+    /* margin-top: 5px; */
+  }
+
   .cart-sub-text {
     font-size: 0.8em;
-    margin-left: 20px;
+    margin-left: 0px;
     color: ${props => (props.active ? '#FF6C00' : props.theme.subTextColor)};
   }
 `;
@@ -84,6 +98,8 @@ const CartDropdown = styled.div`
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
   z-index: 1000;
   padding: 30px;
+  margin-top: 0px;
+  margin-left: -32px;
   border-radius: 8px;
 
   &::before {
@@ -119,17 +135,29 @@ const CartBadge = styled.div`
 
 const ThemeToggleWrapper = styled.div`
   position: absolute;
-  top: -35px;
-  right: -50px;
+  top: -10px;
+  right: -70px;
+`;
+
+const ProfileWrapper = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  &:hover .profile-dropdown {
+    display: block;
+  }
 `;
 
 const UserActions = () => {
   const location = useLocation();
   const { theme, toggleTheme } = useTheme();
+  const { isAuthenticated, logout } = useAuth();
   const { t, i18n } = useTranslation();
   const currentLang = i18n.language;
   const [dropdownLeft, setDropdownLeft] = useState(0);
   const cartWrapperRef = useRef(null);
+  const profileWrapperRef = useRef(null);
   const cartItemsCount = 3; // Replace with actual cart items count
   const direction = currentLang === 'ar' ? 'rtl' : 'ltr';
 
@@ -159,13 +187,22 @@ const UserActions = () => {
           {/* Add more dropdown content here */}
         </CartDropdown>
       </CartWrapper>
-      <StyledLink to="/login" active={location.pathname === '/login'} dir={direction}>
-        <UserIcon style={{ width: '32px', height: '32px', marginRight: '5px' }} />
-        <div className="link-text">
-          <span className="main-text">{t('Login')}</span>
-          <span className="sub-text">{t('or Sign up')}</span>
-        </div>
-      </StyledLink>
+      {isAuthenticated ? (
+        <ProfileWrapper ref={profileWrapperRef}>
+          <StyledLink to="/profile" active={location.pathname === '/profile'} dir={direction}>
+            <ProfileIcon style={{ width: '60px', height: '60px', marginBottom: '15px' }} />
+          </StyledLink>
+          <ProfileDropdown onLogout={logout} />
+        </ProfileWrapper>
+      ) : (
+        <StyledLink to="/login" active={location.pathname === '/login'} dir={direction}>
+          <UserIcon style={{ width: '32px', height: '32px', marginTop: '0px' }} />
+          <div className="link-text">
+            <span className="usericon-main-text">{t('Login')}</span>
+            <span className="usericon-sub-text">{t('or Sign up')}</span>
+          </div>
+        </StyledLink>
+      )}
       <ThemeToggleWrapper>
         <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
       </ThemeToggleWrapper>
