@@ -18,7 +18,7 @@ const NavContainer = styled.nav`
   align-items: center;
   gap: 35px;
   margin-left: 0%;
-  margin-right: 15px;
+  margin-right: 20px;
   position: relative;
   @media (max-width: 768px) {
     width: 100%;
@@ -53,8 +53,8 @@ const StyledLink = styled(Link)`
   }
   .usericon-main-text{
     position: relative;
-    top: 6px;
-    margin-bottom: 9px;
+    top: 1px;
+    margin-bottom: 5px;
   }
 
   .cart-main-text {
@@ -70,7 +70,6 @@ const StyledLink = styled(Link)`
   .usericon-sub-text{
     font-size: 0.8em;
     color: ${props => (props.active ? '#FF6C00' : props.theme.subTextColor)};
-    /* margin-top: 5px; */
   }
 
   .cart-sub-text {
@@ -85,7 +84,8 @@ const CartWrapper = styled.div`
   display: flex;
   align-items: center;
 
-  &:hover .cart-dropdown {
+  &:hover .cart-dropdown,
+  &:hover .profile-dropdown {
     display: block;
   }
 `;
@@ -96,7 +96,7 @@ const CartIconWrapper = styled.div`
 
 const CartBadge = styled.div`
   position: absolute;
-  top: -5px;
+  top: 0px;
   right: 0px;
   background-color: #FF6C00;
   color: white;
@@ -112,7 +112,7 @@ const CartBadge = styled.div`
 const ThemeToggleWrapper = styled.div`
   position: absolute;
   top: -10px;
-  right: -70px;
+  right: -80px;
 `;
 
 const ProfileWrapper = styled.div`
@@ -128,26 +128,64 @@ const ProfileWrapper = styled.div`
 const UserActions = () => {
   const location = useLocation();
   const { theme, toggleTheme } = useTheme();
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, user, logout } = useAuth();
   const { t, i18n } = useTranslation();
   const currentLang = i18n.language;
   const { cartItems } = useContext(CartContext);
   const [dropdownLeft, setDropdownLeft] = useState(0);
   const cartWrapperRef = useRef(null);
+  const subtextRef = useRef(null);
   const profileWrapperRef = useRef(null);
   const direction = currentLang === 'ar' ? 'rtl' : 'ltr';
 
+  const [isCartDropdownVisible, setCartDropdownVisible] = useState(false);
+  const [isProfileDropdownVisible, setProfileDropdownVisible] = useState(false);
+  const cartTimeoutId = useRef(null);
+  const profileTimeoutId = useRef(null);
+
+  const showCartDropdown = () => {
+    clearTimeout(cartTimeoutId.current);
+    setCartDropdownVisible(true);
+  };
+
+  const hideCartDropdown = () => {
+    cartTimeoutId.current = setTimeout(() => {
+      setCartDropdownVisible(false);
+    }, 100); 
+  };
+
+  const showProfileDropdown = () => {
+    clearTimeout(profileTimeoutId.current);
+    setProfileDropdownVisible(true);
+  };
+
+  const hideProfileDropdown = () => {
+    profileTimeoutId.current = setTimeout(() => {
+      setProfileDropdownVisible(false);
+    }, 100);
+  };
+
   useEffect(() => {
-    if (cartWrapperRef.current) {
-      const wrapperWidth = cartWrapperRef.current.offsetWidth;
-      setDropdownLeft(wrapperWidth / 2 - 100); // 100 is half the width of the dropdown (200px)
+    if (cartWrapperRef.current && subtextRef.current) {
+      const cartWrapperWidth = cartWrapperRef.current.offsetWidth;
+      const subtextWidth = subtextRef.current.offsetWidth;
+      setDropdownLeft(cartWrapperWidth - subtextWidth / 2 - 140);
     }
-  }, []);
+
+    return () => {
+      clearTimeout(cartTimeoutId.current);
+      clearTimeout(profileTimeoutId.current);
+    };
+  }, [cartTimeoutId, profileTimeoutId]);
 
   return (
     <NavContainer>
       <CountryLanguageCurrency />
-      <CartWrapper ref={cartWrapperRef}>
+      <CartWrapper 
+        ref={cartWrapperRef} 
+        onMouseEnter={showCartDropdown} 
+        onMouseLeave={hideCartDropdown}
+      >
         <StyledLink to="/cart" active={location.pathname === '/cart'} dir={direction}>
           <CartIconWrapper>
             <CartIcon style={{ width: '32px', height: '32px', marginRight: '5px', paddingTop: '8px' }} />
@@ -155,21 +193,28 @@ const UserActions = () => {
           </CartIconWrapper>
           <div className="link-text">
             <span className="cart-main-text">{t('My Cart')}</span>
-            <span className="cart-sub-text"> $0.00</span>
+            <span className="cart-sub-text" ref={subtextRef}> $0.00</span>
           </div>
         </StyledLink>
-        <CartDropdown items={cartItems} left={dropdownLeft} />
+        <CartDropdown items={cartItems} left={dropdownLeft} isVisible={isCartDropdownVisible} />
       </CartWrapper>
       {isAuthenticated ? (
-        <ProfileWrapper ref={profileWrapperRef}>
+        <ProfileWrapper 
+          ref={profileWrapperRef} 
+          onMouseEnter={showProfileDropdown} 
+          onMouseLeave={hideProfileDropdown}
+        >
           <StyledLink to="/profile" active={location.pathname === '/profile'} dir={direction}>
-            <ProfileIcon style={{ width: '60px', height: '60px', marginBottom: '15px' }} />
+            <ProfileIcon style={{ width: '60px', height: '60px', marginBottom: '0px' }} />
+            <div className="link-text">
+              <span className="usericon-main-text">{user.name}</span>
+            </div>
           </StyledLink>
-          <ProfileDropdown onLogout={logout} />
+          <ProfileDropdown onLogout={logout} isVisible={isProfileDropdownVisible} />
         </ProfileWrapper>
       ) : (
         <StyledLink to="/login" active={location.pathname === '/login'} dir={direction}>
-          <UserIcon style={{ width: '32px', height: '32px', marginTop: '0px' }} />
+          <UserIcon style={{ width: '32px', height: '32px', marginTop: '5px' }} />
           <div className="link-text">
             <span className="usericon-main-text">{t('Login')}</span>
             <span className="usericon-sub-text">{t('or Sign up')}</span>

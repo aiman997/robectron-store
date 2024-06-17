@@ -5,17 +5,17 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserCog, faHeart, faHistory, faCreditCard, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 
 const DropdownContainer = styled.div`
-  display: none;
+  display: ${props => (props.isVisible ? 'block' : 'none')};
   position: absolute;
-  top: 60px;
+  top: 100px;
   left: 50%;
   transform: translateX(-50%);
   width: 200px;
-  background-color: ${props => props.theme.clc_background};
+  background-color: ${props => props.theme.dropdownBackground || '#333'};
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
   z-index: 1000;
   padding: 20px;
-  border-radius: 8px;
+  border-radius: 10px;
   text-align: left;
 
   &::before {
@@ -26,7 +26,7 @@ const DropdownContainer = styled.div`
     transform: translateX(-50%);
     border-width: 0 10px 10px 10px;
     border-style: solid;
-    border-color: transparent transparent ${props => props.theme.clc_background} transparent;
+    border-color: transparent transparent ${props => props.theme.dropdownBackground || '#333'} transparent;
   }
 `;
 
@@ -34,11 +34,14 @@ const DropdownItem = styled(Link)`
   display: flex;
   align-items: center;
   padding: 10px 0;
-  color: ${props => props.theme.headerText};
+  color: ${props => props.theme.dropdownText || '#fff'};
   text-decoration: none;
+  transition: background-color 0.3s, color 0.3s;
 
   &:hover {
-    color: ${props => props.theme.primaryColor};
+    background-color: ${props => props.theme.dropdownHoverBackground || '#444'};
+    color: ${props => props.theme.dropdownHoverText || '#fff'};
+    border-radius: 5px;
   }
 
   svg {
@@ -50,11 +53,14 @@ const LogoutItem = styled.div`
   display: flex;
   align-items: center;
   padding: 10px 0;
-  color: red;
+  color: ${props => props.theme.logoutText || 'red'};
   cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
 
   &:hover {
-    color: darkred;
+    background-color: ${props => props.theme.logoutHoverBackground || '#b30000'};
+    color: ${props => props.theme.logoutHoverText || 'darkred'};
+    border-radius: 5px;
   }
 
   svg {
@@ -62,9 +68,9 @@ const LogoutItem = styled.div`
   }
 `;
 
-const ProfileDropdown = ({ onLogout }) => {
+const ProfileDropdown = ({ onLogout, isVisible }) => {
   return (
-    <DropdownContainer className="profile-dropdown">
+    <DropdownContainer className="profile-dropdown" isVisible={isVisible}>
       <DropdownItem to="/account-settings">
         <FontAwesomeIcon icon={faUserCog} />
         Account Settings
