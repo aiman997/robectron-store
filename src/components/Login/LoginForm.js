@@ -150,7 +150,7 @@ const LoginForm = () => {
           <Label>Email</Label>
           <Input
             type="email"
-            placeholder="johndoe@example.com"
+            placeholder="aiman@example.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />

@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUserCog, faHeart, faHistory, faCreditCard, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 
 const DropdownContainer = styled.div`
   display: none;
@@ -14,7 +16,7 @@ const DropdownContainer = styled.div`
   z-index: 1000;
   padding: 20px;
   border-radius: 8px;
-  text-align: center;
+  text-align: left;
 
   &::before {
     content: '';
@@ -29,7 +31,8 @@ const DropdownContainer = styled.div`
 `;
 
 const DropdownItem = styled(Link)`
-  display: block;
+  display: flex;
+  align-items: center;
   padding: 10px 0;
   color: ${props => props.theme.headerText};
   text-decoration: none;
@@ -37,16 +40,51 @@ const DropdownItem = styled(Link)`
   &:hover {
     color: ${props => props.theme.primaryColor};
   }
+
+  svg {
+    margin-right: 10px;
+  }
+`;
+
+const LogoutItem = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+  color: red;
+  cursor: pointer;
+
+  &:hover {
+    color: darkred;
+  }
+
+  svg {
+    margin-right: 10px;
+  }
 `;
 
 const ProfileDropdown = ({ onLogout }) => {
   return (
     <DropdownContainer className="profile-dropdown">
-      <DropdownItem to="/account-settings">Account Settings</DropdownItem>
-      <DropdownItem to="/favourites">Favourites</DropdownItem>
-      <DropdownItem to="/order-history">Order History</DropdownItem>
-      <DropdownItem to="/billing">Billing</DropdownItem>
-      <DropdownItem as="div" onClick={onLogout}>Log Out</DropdownItem>
+      <DropdownItem to="/account-settings">
+        <FontAwesomeIcon icon={faUserCog} />
+        Account Settings
+      </DropdownItem>
+      <DropdownItem to="/favourites">
+        <FontAwesomeIcon icon={faHeart} />
+        Favourites
+      </DropdownItem>
+      <DropdownItem to="/order-history">
+        <FontAwesomeIcon icon={faHistory} />
+        Order History
+      </DropdownItem>
+      <DropdownItem to="/billing">
+        <FontAwesomeIcon icon={faCreditCard} />
+        Billing
+      </DropdownItem>
+      <LogoutItem onClick={onLogout}>
+        <FontAwesomeIcon icon={faSignOutAlt} />
+        Log Out
+      </LogoutItem>
     </DropdownContainer>
   );
 };

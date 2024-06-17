@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import styled from 'styled-components';
 import { Link, useLocation } from 'react-router-dom';
 import { ReactComponent as UserIcon } from '../../../assets/icons/user.svg';
@@ -9,7 +9,9 @@ import { useTheme } from '../../../context/ThemeContext';
 import ThemeToggle from '../../ThemeToggle';
 import CountryLanguageCurrency from '../CountryLanguageCurrency';
 import ProfileDropdown from './ProfileDropdown';
+import CartDropdown from './CartDropdown';
 import { useTranslation } from 'react-i18next';
+import { CartContext } from '../../../context/CartContext';
 
 const NavContainer = styled.nav`
   display: flex;
@@ -88,32 +90,6 @@ const CartWrapper = styled.div`
   }
 `;
 
-const CartDropdown = styled.div`
-  display: none;
-  position: absolute;
-  top: 50px;
-  left: ${props => props.left}px;
-  width: 200px;
-  background-color: ${props => props.theme.clc_background};
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
-  padding: 30px;
-  margin-top: 0px;
-  margin-left: -32px;
-  border-radius: 8px;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    border-width: 0 10px 10px 10px; /* Adjust the size of the triangle */
-    border-style: solid;
-    border-color: transparent transparent ${props => props.theme.clc_background} transparent;
-  }
-`;
-
 const CartIconWrapper = styled.div`
   position: relative;
 `;
@@ -155,10 +131,10 @@ const UserActions = () => {
   const { isAuthenticated, logout } = useAuth();
   const { t, i18n } = useTranslation();
   const currentLang = i18n.language;
+  const { cartItems } = useContext(CartContext);
   const [dropdownLeft, setDropdownLeft] = useState(0);
   const cartWrapperRef = useRef(null);
   const profileWrapperRef = useRef(null);
-  const cartItemsCount = 3; // Replace with actual cart items count
   const direction = currentLang === 'ar' ? 'rtl' : 'ltr';
 
   useEffect(() => {
@@ -175,17 +151,14 @@ const UserActions = () => {
         <StyledLink to="/cart" active={location.pathname === '/cart'} dir={direction}>
           <CartIconWrapper>
             <CartIcon style={{ width: '32px', height: '32px', marginRight: '5px', paddingTop: '8px' }} />
-            <CartBadge>{cartItemsCount}</CartBadge>
+            <CartBadge>{cartItems.length}</CartBadge>
           </CartIconWrapper>
           <div className="link-text">
             <span className="cart-main-text">{t('My Cart')}</span>
             <span className="cart-sub-text"> $0.00</span>
           </div>
         </StyledLink>
-        <CartDropdown className="cart-dropdown" left={dropdownLeft}>
-          <p>Your cart is currently empty.</p>
-          {/* Add more dropdown content here */}
-        </CartDropdown>
+        <CartDropdown items={cartItems} left={dropdownLeft} />
       </CartWrapper>
       {isAuthenticated ? (
         <ProfileWrapper ref={profileWrapperRef}>
