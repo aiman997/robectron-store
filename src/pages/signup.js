@@ -5,7 +5,7 @@ import SignUpForm from '../components/SignUp/SignUpForm';
 
 const SignUpContainer = styled.div`
   display: flex;
-  height: 100vh; /* Ensures the container takes full height of the viewport */
+  height: 100vh;
 `;
 
 const SignUp = () => {
