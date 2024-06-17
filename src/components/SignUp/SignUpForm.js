@@ -35,13 +35,13 @@ const Title = styled.h2`
 
 const Subtitle = styled.p`
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
   color: gray;
 `;
 
 const InputGroup = styled.div`
   position: relative;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 `;
 
 const Label = styled.label`
@@ -120,6 +120,7 @@ const FooterText = styled.p`
 const SignUpForm = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -145,12 +146,30 @@ const SignUpForm = () => {
         <Subtitle>Join us today! Create your account below</Subtitle>
         {error && <p style={{ color: 'red' }}>{error}</p>}
         <InputGroup>
+          <Label>Name</Label>
+          <Input
+            type="name"
+            placeholder="Aiman_X"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+        </InputGroup>
+        <InputGroup>
           <Label>Email</Label>
           <Input
             type="email"
-            placeholder="johndoe@example.com"
+            placeholder="aiman@example.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+          />
+        </InputGroup>
+        <InputGroup>
+          <Label>Phone Number</Label>
+          <Input
+            type="text"
+            placeholder="Enter Phone Number"
+            value={phoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)}
           />
         </InputGroup>
         <InputGroup>
@@ -172,15 +191,6 @@ const SignUpForm = () => {
             onChange={(e) => setConfirmPassword(e.target.value)}
           />
           <Icon icon={faEye} />
-        </InputGroup>
-        <InputGroup>
-          <Label>Phone Number</Label>
-          <Input
-            type="text"
-            placeholder="Enter Phone Number"
-            value={phoneNumber}
-            onChange={(e) => setPhoneNumber(e.target.value)}
-          />
         </InputGroup>
         <Button type="submit">Sign Up</Button>
         <GoogleButton>
