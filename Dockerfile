@@ -1,5 +1,6 @@
 # Use an official Node.js runtime as a parent image
-FROM node:16-alpine
+# FROM node:16-alpine
+FROM node:alpine
 
 # Set the working directory
 WORKDIR /app
@@ -27,4 +28,3 @@ EXPOSE 3000
 
 # Start the application
 CMD ["npm", "start"]
-

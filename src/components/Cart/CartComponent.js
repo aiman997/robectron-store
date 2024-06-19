@@ -1,12 +1,9 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { CartContext } from '../../context/CartContext';
-
-import VisaIcon from '../../assets/icons/visa-electron.svg';
-import MastercardIcon from '../../assets/icons/mastercard.svg';
-import PayPalIcon from '../../assets/icons/paypal.svg';
-import ApplePayIcon from '../../assets/icons/apple-pay.svg';
-import GooglePayIcon from '../../assets/icons/google-pay.svg';
+import OrderSummary from './OrderSummary';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrashAlt, faStar } from '@fortawesome/free-solid-svg-icons';
 
 const Container = styled.div`
   display: flex;
@@ -35,8 +32,8 @@ const CartItem = styled.div`
 `;
 
 const ItemImage = styled.img`
-  width: 100px;
-  height: 100px;
+  width: 120px;
+  height: 120px;
   margin-right: 20px;
   border-radius: 5px;
   object-fit: cover;
@@ -54,15 +51,23 @@ const ItemName = styled.span`
   margin-bottom: 5px;
 `;
 
+const ItemPriceRemoveWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+`;
+
 const ItemPrice = styled.span`
   font-size: 18px;
   font-weight: 600;
   color: #333;
+  margin-bottom: 50px;
 `;
 
 const QuantitySelector = styled.div`
   display: flex;
   align-items: center;
+  margin-top: 10px;
 `;
 
 const Quantity = styled.select`
@@ -75,65 +80,42 @@ const RemoveButton = styled.button`
   border: none;
   color: #ff6c00;
   cursor: pointer;
-  margin-left: 20px;
-  font-size: 20px;
+  font-size: 18px;
 
   &:hover {
     color: #e65c00;
   }
 `;
 
-const OrderSummary = styled.div`
-  flex: 1;
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-`;
+const StarRating = ({ rating }) => {
+  return (
+    <div>
+      {Array(5).fill().map((_, i) => (
+        <FontAwesomeIcon
+          icon={faStar}
+          key={i}
+          style={{ color: i < rating ? '#ffd700' : '#ddd', marginRight: '2px' }}
+        />
+      ))}
+      <span>305</span>
+    </div>
+  );
+};
 
-const OrderSummaryTitle = styled.h3`
-  margin-bottom: 20px;
-`;
+const CartHeader = styled.h2`
+  font-size: 30px;
+  font-weight: 700;
+  margin-bottom: 30px;
 
-const OrderSummaryItem = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 10px;
-`;
-
-const OrderSummaryTotal = styled.div`
-  display: flex;
-  justify-content: space-between;
-  font-weight: bold;
-  font-size: 16px;
-  margin-top: 20px;
-`;
-
-const CheckoutButton = styled.button`
-  width: 100%;
-  padding: 10px;
-  background-color: #ff6c00;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-top: 20px;
-
-  &:hover {
-    background-color: #e65c00;
+  span {
+    background-color: #ddd;
+    padding: 5px 10px;
+    border-radius: 50%;
+    font-size: 14px;
+    margin-left: 5px;
+    position: relative;
+    top: -5px;
   }
-`;
-
-const PaymentMethods = styled.div`
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-`;
-
-const PaymentMethod = styled.img`
-  width: 50px;
-  height: auto;
-  margin: 0 10px;
 `;
 
 const CartComponent = () => {
@@ -146,13 +128,15 @@ const CartComponent = () => {
   return (
     <Container>
       <CartItems>
-        <h2>Cart <span>({cartItems.length})</span></h2>
+        <CartHeader>
+          Cart <span>{cartItems.length}</span>
+        </CartHeader>
         {cartItems.map(item => (
           <CartItem key={item.id}>
             <ItemImage src={item.image} alt={item.name} />
             <ItemInfo>
               <ItemName>{item.name}</ItemName>
-              <ItemPrice>${item.price.toFixed(2)}</ItemPrice>
+              <StarRating rating={4} /> {/* Adjust the rating value as needed */}
               <QuantitySelector>
                 <label>Qty:</label>
                 <Quantity>
@@ -162,31 +146,16 @@ const CartComponent = () => {
                 </Quantity>
               </QuantitySelector>
             </ItemInfo>
-            <RemoveButton>🗑</RemoveButton>
+            <ItemPriceRemoveWrapper>
+              <ItemPrice>${item.price.toFixed(2)}</ItemPrice>
+              <RemoveButton>
+                <FontAwesomeIcon icon={faTrashAlt} />
+              </RemoveButton>
+            </ItemPriceRemoveWrapper>
           </CartItem>
         ))}
       </CartItems>
-      <OrderSummary>
-        <OrderSummaryTitle>Order Summary</OrderSummaryTitle>
-        {cartItems.map(item => (
-          <OrderSummaryItem key={item.id}>
-            <span>{item.name}</span>
-            <span>${item.price.toFixed(2)}</span>
-          </OrderSummaryItem>
-        ))}
-        <OrderSummaryTotal>
-          <span>Total</span>
-          <span>${calculateTotal().toFixed(2)}</span>
-        </OrderSummaryTotal>
-        <CheckoutButton>Checkout</CheckoutButton>
-        <PaymentMethods>
-        <PaymentMethod src={VisaIcon} alt="Visa" />
-          <PaymentMethod src={MastercardIcon} alt="Mastercard" />
-          <PaymentMethod src={PayPalIcon} alt="PayPal" />
-          <PaymentMethod src={ApplePayIcon} alt="Apple Pay" />
-          <PaymentMethod src={GooglePayIcon} alt="Google Pay" />
-        </PaymentMethods>
-      </OrderSummary>
+      <OrderSummary cartItems={cartItems} calculateTotal={calculateTotal} />
     </Container>
   );
 };

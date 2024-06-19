@@ -6,6 +6,10 @@ import ProductList from '../components/Products/ProductList';
 
 const Container = styled.div`
   display: flex;
+  min-height: 150vh;
+  padding-top: 80px;
+  width: 100%;
+  padding-top: 120px;
 `;
 
 const Content = styled.div`
